@@ -1,60 +1,159 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { signUpSchema } from "@/schemas/signUpSchema";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import axios, { AxiosError } from "axios";
 
-const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { ApiResponse } from "@/types/ApiRespnse";
 
-  const handleLogin = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log('Login with:',username, email, password);
-    // Add your authentication logic here
+const SignUpPage = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const { toast } = useToast();
+
+  //form shape
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const handleOnSubmit = async (values: z.infer<typeof signUpSchema>) => {
+    try {
+      setLoading(true);
+      const response = await axios.post<ApiResponse>("/api/signup", values);
+      if (!response) {
+        toast({
+          title: "signup Failed",
+          description: "error in signup",
+          duration: 3000,
+        });
+        throw new Error("Server Error");
+      }
+      toast({
+        title: "Success",
+        description: "Sign up successful",
+      });
+      console.log(response);
+      form.reset();
+    } catch (error) {
+      console.log("error in signUpPage ", error);
+      const axiosError = error as AxiosError<ApiResponse>;
+      let errorMessage = axiosError.response?.data.message;
+      toast({
+        title: "Error in signUp Page",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-200 text-black">
-      <div className="m-auto w-1/3 shadow-lg">
-        <div className="bg-white p-8">
-          <h2 className="text-center text-2xl mb-4">Login to Your Account</h2>
-          <div className="flex justify-center space-x-4 mb-4">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-xl">F</button>
-            <button className="bg-red-500 text-white px-4 py-2 rounded-xl">G+</button>
-            <button className="bg-blue-700 text-white px-4 py-2 rounded-xl">in</button>
+    <>
+      {" "}
+      <div className="flex min-h-screen bg-gray-200 text-black">
+        <div className="m-auto w-1/3 shadow-lg">
+          <div className="bg-white p-8">
+            <h2 className="text-center text-2xl mb-4">Login to Your Account</h2>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(handleOnSubmit)}
+                className="space-y-3"
+              >
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <div className="">
+                          <Input
+                            type="Username"
+                            placeholder="username"
+                            className="w-full p-2  border rounded"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <div className="">
+                          <Input
+                            type="email"
+                            placeholder="Email"
+                            className="w-full p-2  border rounded"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl className="">
+                        <div className="">
+                          <Input
+                            type="Password"
+                            placeholder="Password"
+                            className="w-full p-2  border rounded"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="w-full bg-green-500 text-white p-2 rounded"
+                >
+                  Sign In
+                </Button>
+              </form>
+            </Form>
           </div>
-          <p className="text-center mb-4">OR</p>
-          <form onSubmit={handleLogin}>
-            <input 
-              type="text" 
-              placeholder="usename"  
-              value={username} 
-              onChange={e => setUsername(e.target.value)} 
-              className="w-full p-2 mb-4 border rounded"
-            />
-            <input 
-              type="email" 
-              placeholder="Email" 
-              value={email} 
-              onChange={e => setEmail(e.target.value)} 
-              className="w-full p-2 mb-4 border rounded"
-            />
-            <input 
-              type="password" 
-              placeholder="Password" 
-              value={password} 
-              onChange={e => setPassword(e.target.value)} 
-              className="w-full p-2 mb-4 border rounded"
-            />
-            <button type="submit" className="w-full bg-green-500 text-white p-2 rounded">Sign In</button>
-          </form>
-        </div>
-        <div className="bg-green-500 text-white p-4 text-center">
-          <span>New Here? </span>
-          <button className="underline">Sign Up</button>
+          <div className="bg-green-500 text-white p-4 text-center">
+            <span>New Here? </span>
+            <button className="underline">Sign Up</button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default LoginPage;
+export default SignUpPage;
