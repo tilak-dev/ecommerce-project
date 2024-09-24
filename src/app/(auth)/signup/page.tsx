@@ -18,10 +18,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ApiResponse } from "@/types/ApiRespnse";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const SignUpPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
+  const router = useRouter()
 
   //form shape
   const form = useForm<z.infer<typeof signUpSchema>>({
@@ -49,14 +52,14 @@ const SignUpPage = () => {
         title: "Success",
         description: "Sign up successful",
       });
-      console.log(response);
+      router.replace('/signin')
       form.reset();
     } catch (error) {
       console.log("error in signUpPage ", error);
       const axiosError = error as AxiosError<ApiResponse>;
       let errorMessage = axiosError.response?.data.message;
       toast({
-        title: "Error in signUp Page",
+        title: "Error in sign Up",
         description: errorMessage,
         variant: "destructive",
       });
@@ -71,7 +74,9 @@ const SignUpPage = () => {
       <div className="flex min-h-screen bg-gray-200 text-black">
         <div className="m-auto w-1/3 shadow-lg">
           <div className="bg-white p-8">
-            <h2 className="text-center text-2xl mb-4">Login to Your Account</h2>
+            <h2 className="text-center text-2xl mb-4">
+              Sign up for new Account
+            </h2>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(handleOnSubmit)}
@@ -137,18 +142,23 @@ const SignUpPage = () => {
                     </FormItem>
                   )}
                 />
-                <Button
+                 <Button
+                  disabled={loading ? true : false}
                   type="submit"
-                  className="w-full bg-green-500 text-white p-2 rounded"
+                  className={`w-full bg-green-500 text-white p-2 rounded ${
+                    loading ? "cursor-not-allowed" : ""
+                  }`}
                 >
-                  Sign In
+                  {loading ? "Wait" : "  Sign Up"}
                 </Button>
               </form>
             </Form>
           </div>
           <div className="bg-green-500 text-white p-4 text-center">
-            <span>New Here? </span>
-            <button className="underline">Sign Up</button>
+            <span>Already hava an account ? </span>
+            <Link href={"/signin"}>
+              <button className="underline">Sign In</button>
+            </Link>
           </div>
         </div>
       </div>
