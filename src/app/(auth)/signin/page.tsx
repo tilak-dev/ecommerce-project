@@ -20,6 +20,7 @@ import { ApiResponse } from "@/types/ApiRespnse";
 import { signInSchema } from "@/schemas/signInSchema";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const SignUpPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,7 +39,12 @@ const SignUpPage = () => {
   const handleOnSubmit = async (values: z.infer<typeof signInSchema>) => {
     try {
       setLoading(true);
-      const response = await axios.post<ApiResponse>("/api/signin", values);
+      const response = signIn("credentials",{
+        redirect:false,
+        email: values.email,
+        password: values.password,
+      })
+      
       if (!response) {
         toast({
           title: "signup Failed",
