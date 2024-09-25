@@ -7,7 +7,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { categoryId: string } }
 ) {
-  dbConnect(); //necessary for bd connect
+  await dbConnect(); //necessary for bd connect
   try {
     const { categoryId } = params;
     if (!categoryId) {

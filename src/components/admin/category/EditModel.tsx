@@ -12,13 +12,17 @@ import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 interface EditModelProps {
-  id: string; // Make sure you're passing the id as a string
+  id: string; 
+  defaultValue: string
+
 }
 
-export default function EditModel({ id }: EditModelProps) {
+export default function EditModel(
+  { id,defaultValue }: EditModelProps,
+) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState<string>("");
+  const [name, setName] = useState<string>(defaultValue);
   //taking changes from textarea
   const handleNameChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.preventDefault();

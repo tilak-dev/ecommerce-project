@@ -3,7 +3,7 @@ import CategoryModel from "@/models/Category";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  dbConnect(); //necessary for bd connect
+  await dbConnect(); //necessary for bd connect
   try {
     //getting the category from the database
     const category = await CategoryModel.find({});

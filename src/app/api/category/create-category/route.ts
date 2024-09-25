@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import slugify from "slugify";
 
 export async function POST(request: NextRequest) {
-  dbConnect(); //necessary for bd connect
+  await dbConnect(); //necessary for bd connect
   try {
     const reqBody = await request.json();
     const { categoryName } = reqBody;

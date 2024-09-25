@@ -113,7 +113,7 @@ export default function page() {
                   <TableCell className="font-medium">{cat._id}</TableCell>
                   <TableCell>{cat.categoryName}</TableCell>
                   <TableCell>
-                    <EditModel id={cat._id} />
+                    <EditModel defaultValue={cat.categoryName} id={cat._id} />
                   </TableCell>
                   <TableCell>
                     <button

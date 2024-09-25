@@ -7,7 +7,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { categoryId: string } }
 ) {
-  dbConnect(); //necessary for bd connect
+  await dbConnect(); //necessary for bd connect
   try {
     const { categoryId } = params;
     const reqBody = await request.json();

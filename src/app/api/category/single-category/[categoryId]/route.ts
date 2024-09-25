@@ -6,7 +6,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { categoryId: string } }
 ) {
-  dbConnect(); //necessary for bd connect
+  await dbConnect(); //necessary for bd connect
 
   const { categoryId } = params;
   try {
