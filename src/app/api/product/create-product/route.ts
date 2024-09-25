@@ -1,56 +1,80 @@
 import dbConnect from "@/configs/dbconnect";
-import { passwordHasher } from "@/helper/passwordHasher";
-import UserModel from "@/models/User";
+import { Product } from "@/models/Product";
 import { NextRequest, NextResponse } from "next/server";
 
+//dbconnect config
+dbConnect();
+
+//create product route
 export async function POST(request: NextRequest) {
-  await dbConnect(); //necessary for bd connect
   try {
     const reqBody = await request.json();
-    const { username, email, password } = reqBody;
-    if (!username || !password || !email) {
+    const {
+      name,
+      price,
+      slug,
+      description,
+      category,
+      quantity,
+      shipping,
+      photoLink,
+    } = reqBody;
+    // validate inputs
+    if (
+      !name ||
+      !price ||
+      !slug ||
+      !description ||
+      !category ||
+      !quantity ||
+      !photoLink
+    ) {
       return NextResponse.json(
         {
           success: false,
-          message: "Please provide all required fields",
+          message: "All fields are required",
+          formdata: {
+            name,
+            price,
+            slug,
+            description,
+            category,
+            quantity,
+            photoLink,
+          },
         },
         { status: 400 }
       );
     }
-    //Check if user already exists
-    const user = await UserModel.findOne({ email });
-    if (user) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User already exists",
-        },
-        { status: 400 }
-      );
-    }
-    //hashing the password
-    const hashedPassword = await passwordHasher(password);
-    //Create new user
-    const newUser = new UserModel({
-      username,
-      email,
-      password: hashedPassword,
+
+    const newProduct = new Product({
+      name,
+      price,
+      slug,
+      description,
+      category,
+      quantity,
+      shipping: false,
+      photoLink,
     });
-    await newUser.save();
+    console.log(newProduct);
+    // save product to database
+    await newProduct.save();
     return NextResponse.json(
       {
         success: true,
-        message: "User signed up successfully",
-        response: newUser,
+        message: "Product created successfully",
+        data: newProduct,
       },
-      { status: 201 }
+      { status: 200 }
     );
-  } catch (error) {
-    console.log("error in signup page", error);
+    //...
+  } catch (error: any) {
     return NextResponse.json(
       {
         success: false,
-        message: "Error in signing up",
+        message: "Error in creating product",
+        error: error.message,
       },
       { status: 500 }
     );

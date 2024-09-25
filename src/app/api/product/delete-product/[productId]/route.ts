@@ -28,21 +28,24 @@ export async function DELETE(
         { status: 400 }
       );
     }
-    return (
-      NextResponse.json({
+    return NextResponse.json(
+      {
         success: true,
         message: "product deleted successfully",
         response,
-      }),
+      },
       { status: 200 }
     );
   } catch (error: any) {
-    return NextResponse.json({
-      success: false,
-      message: "Error in fetching product",
-      error: error.message,
-    },{
-      status: 500
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error in fetching product",
+        error: error.message,
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }
