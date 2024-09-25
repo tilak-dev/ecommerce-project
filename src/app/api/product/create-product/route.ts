@@ -4,7 +4,7 @@ import UserModel from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  dbConnect(); //necessary for bd connect
+  await dbConnect(); //necessary for bd connect
   try {
     const reqBody = await request.json();
     const { username, email, password } = reqBody;
