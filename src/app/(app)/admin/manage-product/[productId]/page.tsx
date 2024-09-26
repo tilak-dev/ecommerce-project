@@ -1,6 +1,6 @@
 "use client";
 
-import AdminProductDetail from "@/components/admin/AdminProductDetail ";
+import AdminProductDetail from "@/components/admin/product/AdminProductDetail ";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -92,7 +92,7 @@ export default function ProductPage() {
           price={product.price}
           category={product.category}
           image={product.photoLink}
-          stock={product.quantity}
+          quantity={product.quantity}
           onDelete={handleDelete}
         />
       )}
