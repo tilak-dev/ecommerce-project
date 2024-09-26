@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
           if (valid) {
             return user;
           }
-        } catch (error:any) {
+        } catch (error: any) {
           console.log("Error in login", error);
           throw new Error(error);
         }
@@ -58,6 +58,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token._id = user._id?.toString();
         token.username = user.username;
+        token.isAdmin = user.isAdmin;
         token.email = user?.email;
       }
       return token;
@@ -66,6 +67,7 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.user._id = token._id;
         session.user.username = token.username;
+        session.user.isAdmin = token.isAdmin;
         session.user.email = token.email;
       }
       return session;

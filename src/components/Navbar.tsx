@@ -2,13 +2,16 @@
 import { toast } from "@/hooks/use-toast";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter()
   const { data: session } = useSession();
   const hnadleOnLogout = () => {
     // Logout logic here
     try {
       signOut();
+      router.replace('/')
       toast({
         title: "Logged Out",
         description: "You have been logged out successfully",

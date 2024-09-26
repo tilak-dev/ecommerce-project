@@ -10,7 +10,11 @@ export async function middleware(request: NextRequest) {
 
   const privatePath = path.startsWith("/dashboard");
 
-  const adminPath = path.startsWith("/admin");
+  const adminPath =
+    path.startsWith("/admin") ||
+    path.startsWith("/admin/manage-category") ||
+    path.startsWith("/admin/manage-product") ||
+    path.startsWith("/admin/create-product");
 
   console.log(token);
   if (token && publicPath) {
@@ -19,14 +23,25 @@ export async function middleware(request: NextRequest) {
   if (!token && privatePath) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
-
-  
+  if (token) {
+    if (adminPath && token.isAdmin) {
+      return NextResponse.next();
+    }
+    if (adminPath && !token.isAdmin) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+    if (privatePath) {
+      return NextResponse.next();
+    }
+  }
 }
 export const config = {
   matcher: [
     "/signin",
     "/admin",
-    "admin/:path*",
+    "/admin/manage-category",
+    "/admin/create-product",
+    "/admin/manage-product",
     "/signup",
     "/",
     "/dashboard/:path*",
