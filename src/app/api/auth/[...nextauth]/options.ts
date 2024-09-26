@@ -10,9 +10,9 @@ export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       id: "credentials",
-      name: "credentials",
+      name: "Credentials",
       credentials: {
-        username: {
+        email: {
           label: "Email",
           type: "email",
         },
@@ -21,9 +21,7 @@ export const authOptions: NextAuthOptions = {
           type: "password",
         },
       },
-      async authorize(
-        credentials: Record<string, string> | undefined
-      ): Promise<any> {
+      async authorize(credentials): Promise<any> {
         await dbConnect();
         try {
           if (!credentials) {
@@ -46,18 +44,11 @@ export const authOptions: NextAuthOptions = {
           }
           // If user is found, return it
           if (valid) {
-            return NextResponse.json({
-              success: true,
-              message: "Login Successful",
-              user,
-            });
+            return user;
           }
-        } catch (error) {
+        } catch (error:any) {
           console.log("Error in login", error);
-          return NextResponse.json({
-            success: false,
-            message: "Error in login",
-          });
+          throw new Error(error);
         }
       },
     }),
@@ -81,10 +72,10 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn:"signin"
+    signIn: "/signin",
   },
-  session:{
-    strategy:"jwt"
+  session: {
+    strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

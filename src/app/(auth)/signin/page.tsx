@@ -39,13 +39,13 @@ const SignUpPage = () => {
   const handleOnSubmit = async (values: z.infer<typeof signInSchema>) => {
     try {
       setLoading(true);
-      const response = signIn("credentials",{
-        redirect:false,
+      const response = await signIn("credentials", {
+        redirect: false,
         email: values.email,
         password: values.password,
-      })
-      
-      if (!response) {
+      });
+
+      if (response?.error) {
         toast({
           title: "signup Failed",
           description: "error in signin",
@@ -57,8 +57,10 @@ const SignUpPage = () => {
         title: "Success",
         description: "Sign in successful",
       });
-      router.push("/");
-      form.reset();
+      if (response?.url) {
+        router.replace("/");
+        form.reset();
+      }
     } catch (error) {
       console.log("error in sign in", error);
       const axiosError = error as AxiosError<ApiResponse>;

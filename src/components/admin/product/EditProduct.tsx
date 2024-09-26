@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +7,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { InputChangedEvent } from "@/helper/InputChangeEvent";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import slugify from "slugify";
 interface EditModelProps {
@@ -28,6 +35,7 @@ export default function EditProducts({ id }: EditModelProps) {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [categoryList, setCategoryList] = useState<Catecories[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,6 +131,32 @@ export default function EditProducts({ id }: EditModelProps) {
     }
   };
 
+  //fetched categories
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/api/category/all-category");
+      if (!response) {
+        console.log("No category");
+        return;
+      }
+      setCategoryList(response.data.data);
+    } catch (error) {
+      console.log("Error fetching categories", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOncategory = (id: string) => {
+    setCategory(id);
+    console.log(id);
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -188,18 +222,39 @@ export default function EditProducts({ id }: EditModelProps) {
 
             {/* Category */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1 text-sm">
+              <label className="block text-gray-700 font-medium mb-2">
                 Category
               </label>
-              <input
-                type="text"
-                name="category"
-                value={category}
-                onChange={(e) => setCategory(InputChangedEvent(e))}
-                required
-                placeholder="Enter category ID"
-                className="w-full px-3 py-2 md:px-4 md:py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="">
+                <Select onValueChange={handleOncategory}>
+                  <SelectTrigger className=" text-gray-700 font-medium ">
+                    <SelectValue placeholder="Select a Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {!categoryList && (
+                        <>first Add Category to use this method</>
+                      )}
+                      {categoryList.length > 0 &&
+                        categoryList.map((cat) =>
+                          loading ? (
+                            <SelectItem key={"1"} value="loading">
+                              loading...
+                            </SelectItem>
+                          ) : (
+                            <SelectItem key={cat._id} value={cat._id}>
+                              <option
+                                onChange={() => handleOncategory(cat._id)}
+                              >
+                                {cat.categoryName}
+                              </option>
+                            </SelectItem>
+                          )
+                        )}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Quantity */}
