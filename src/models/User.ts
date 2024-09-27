@@ -1,12 +1,41 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+export interface Address extends Document {
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
+
+export const addressSchema: Schema<Address> = new Schema(
+  {
+    city: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      required: true,
+    },
+    zip: {
+      type: String,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
 export interface User extends Document {
   username: string;
   email: string;
   password: string;
   image?: string;
   isAdmin?: boolean;
-  address: string[];
+  address: Address[];
   phone?: string;
   orders?: string[];
 }
@@ -35,7 +64,7 @@ const userSchema: Schema<User> = new Schema(
       type: Boolean,
       default: false,
     },
-    address: [],
+    address: [addressSchema],
     phone: {
       type: String,
       default: null,

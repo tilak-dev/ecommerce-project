@@ -1,25 +1,27 @@
 import dbConnect from "@/configs/dbconnect";
-import { passwordCompare, passwordHasher } from "@/helper/passwordHasher";
-import UserModel from "@/models/User";
+import UserModel, { Address } from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
-
 dbConnect()
-export async function PUT(
+export async function POST(
   request: NextRequest,
   { params }: { params: { userId: string } }
 ) {
   try {
     const { userId } = params;
     const reqBody = await request.json();
-    const { oldPassword, newPassword } = reqBody;
+    const { 
+      city,
+      state,
+      zip,
+      country,} = reqBody;
 
     //validation
-    if (!oldPassword || !userId || !newPassword) {
+    if (!city || !userId || !state || !zip || !country) {
       return NextResponse.json(
         {
           success: false,
-          message: "Password, User ID  and new password are required",
+          message: "all address field  are required",
         },
         { status: 400 }
       );
@@ -35,35 +37,28 @@ export async function PUT(
         { status: 404 }
       );
     }
-    // campare password
-    const valid = await passwordCompare(oldPassword, user.password);
-    if (!valid) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid password",
-        },
-        { status: 401 }
-      );
+    // update user address
+    const newAddress = {
+      city,
+      state,
+      zip,
+      country,
     }
 
-    // new password hashed
-    const hashedPassword = await passwordHasher(newPassword);
-
-    // update password
-    user.password = hashedPassword;
+    user.address.push(newAddress as Address)
+    //save the address
     await user.save();
     return NextResponse.json({
       success: true,
-      message: "Password updated successfully",
+      message: "Address added successfully",
       data: user,
     });
   } catch (error) {
-    console.log("error in updating password", error);
+    console.log("error in updating address field", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Error in updating password",
+        message: "Error in updating address field",
         error,
       },
       { status: 500 }

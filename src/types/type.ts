@@ -1,7 +1,7 @@
 export interface Catecories {
   _id: string;
   categoryName: string;
-  slug?:string;
+  slug?: string;
 }
 
 export interface Products {
@@ -12,4 +12,11 @@ export interface Products {
   photoLink: string;
   category: string;
   quantity: number;
+}
+
+export interface AddressType {
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
 }
