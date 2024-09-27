@@ -1,10 +1,16 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
+import { adminLink } from "@/data/Link";
 
 export default function AdminLayout() {
-  const pathname = usePathname(); // Get the current route for active state
+  const pathname = usePathname();
+  const [active, setActive] = useState<
+    string | number | readonly string[] | undefined
+  >("");
+
+  //set active
 
   return (
     <div className="w-64 h-full flex-col text-white bg-cyan-800">
@@ -17,55 +23,27 @@ export default function AdminLayout() {
         {/* Navigation Links */}
         <nav className="space-y-2">
           <ul className="space-y-1">
-            {/* Dashboard Link */}
-            <li
-              className={`${
-                pathname === "/admin"
-                  ? "bg-cyan-700 text-white"
-                  : "text-cyan-100"
-              } rounded-lg transition-colors duration-200 hover:bg-cyan-600 focus:bg-cyan-700`}
-            >
-              <Link href="/admin" className="block py-3 px-4">
-                Dashboard
-              </Link>
-            </li>
-
-            {/* Manage Category Link */}
-            <li
-              className={`${
-                pathname === "/admin/manage-category"
-                  ? "bg-cyan-700 text-white"
-                  : "text-cyan-100"
-              } rounded-lg transition-colors duration-200 hover:bg-cyan-600 focus:bg-cyan-700`}
-            >
-              <Link href="/admin/manage-category" className="block py-3 px-4">
-                Manage Category
-              </Link>
-            </li>
-            {/* Create Product Link */}
-            <li
-              className={`${
-                pathname === "/admin/create-product"
-                  ? "bg-cyan-700 text-white"
-                  : "text-cyan-100"
-              } rounded-lg transition-colors duration-200 hover:bg-cyan-600 focus:bg-cyan-700`}
-            >
-              <Link href="/admin/create-product" className="block py-3 px-4">
-                Create Product
-              </Link>
-            </li>
-            {/* Manage Product Link */}
-            <li
-              className={`${
-                pathname === "/admin/manage-product"
-                  ? "bg-cyan-700 text-white"
-                  : "text-cyan-100"
-              } rounded-lg transition-colors duration-200 hover:bg-cyan-600 focus:bg-cyan-700`}
-            >
-              <Link href="/admin/manage-product" className="block py-3 px-4">
-                Manage Product
-              </Link>
-            </li>
+            {adminLink &&
+              adminLink.map((link) => (
+                <li
+                  key={link.id}
+                  value={link.link}
+                  onClick={()=>setActive(link.id)}
+                  className={`${
+                    active === link.id
+                      ? "bg-cyan-700 text-white"
+                      : "text-cyan-100"
+                  } rounded-lg transition-colors duration-200 hover:bg-cyan-600 focus:bg-cyan-700`}
+                >
+                  <Link
+                    href={link.link}
+                    className="block py-3 px-4"
+                  >
+                    {link.value}
+                  </Link>
+                </li>
+              ))}
+          
           </ul>
         </nav>
       </div>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import axios from "axios";
-import { price } from "@/price";
+import { price } from "@/data/price";
 import { toast } from "@/hooks/use-toast";
 import { Catecories } from "@/types/type";
 
