@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ApiResponse } from "@/types/ApiRespnse";
 import EditModel from "@/components/admin/category/EditModel";
 import { AddCategory } from "@/components/admin/category/AddCategory";
+import { Catecories } from "@/types/type";
 
 export default function page() {
   const { toast } = useToast();

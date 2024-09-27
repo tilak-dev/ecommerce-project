@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { InputChangedEvent } from "@/helper/InputChangeEvent";
+import { Catecories } from "@/types/type";
 
 
 export default function AddProductPage() {

@@ -20,10 +20,6 @@ export default function AdminDetailPage() {
   }
 
   if (status === "authenticated") {
-    // Assuming only admins have access to this page, you can check the user's role here
-    // If your session has a role or permission field, use that to limit access further
-    // Example: if (session.user.role !== 'admin') return <p>Access Denied</p>;
-
     return (
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Admin Detail Page</h1>

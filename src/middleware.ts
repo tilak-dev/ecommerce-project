@@ -20,7 +20,10 @@ export async function middleware(request: NextRequest) {
   if (token && publicPath) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
-  if (!token && privatePath) {
+  if (!token && privatePath ) {
+    return NextResponse.redirect(new URL("/signin", request.url));
+  }
+  if (!token && adminPath ) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
   if (token) {
