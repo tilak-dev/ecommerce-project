@@ -8,7 +8,8 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const publicPath = path.startsWith("/signin") || path.startsWith("/signup");
 
-  const privatePath = path.startsWith("/dashboard");
+  const privatePath =
+    path.startsWith("/account") || path.startsWith("/account/:path*");
 
   const adminPath =
     path.startsWith("/admin") ||
@@ -18,12 +19,12 @@ export async function middleware(request: NextRequest) {
 
   console.log(token);
   if (token && publicPath) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/account", request.url));
   }
-  if (!token && privatePath ) {
+  if (!token && privatePath) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
-  if (!token && adminPath ) {
+  if (!token && adminPath) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
   if (token) {
@@ -31,7 +32,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
     if (adminPath && !token.isAdmin) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return NextResponse.redirect(new URL("/account", request.url));
     }
     if (privatePath) {
       return NextResponse.next();
@@ -47,6 +48,7 @@ export const config = {
     "/admin/manage-product",
     "/signup",
     "/",
-    "/dashboard/:path*",
+    "/account",
+    "/account/:path*",
   ],
 };

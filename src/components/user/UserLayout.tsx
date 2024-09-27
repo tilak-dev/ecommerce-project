@@ -1,9 +1,9 @@
 "use client";
+import { userLink } from "@/data/Link";
 import Link from "next/link";
 import React, { useState } from "react";
-import { adminLink } from "@/data/Link";
 
-export default function AdminLayout() {
+export default function UserLayout() {
   const [active, setActive] = useState<
     string | number | readonly string[] | undefined
   >("");
@@ -21,8 +21,8 @@ export default function AdminLayout() {
         {/* Navigation Links */}
         <nav className="space-y-2">
           <ul className="space-y-1">
-            {adminLink &&
-              adminLink.map((link) => (
+            {userLink &&
+              userLink.map((link) => (
                 <li
                   key={link.id}
                   value={link.link}
