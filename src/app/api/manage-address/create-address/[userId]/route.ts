@@ -2,19 +2,15 @@ import dbConnect from "@/configs/dbconnect";
 import UserModel, { Address } from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
-dbConnect()
 export async function POST(
   request: NextRequest,
   { params }: { params: { userId: string } }
 ) {
+  await dbConnect();
   try {
     const { userId } = params;
     const reqBody = await request.json();
-    const { 
-      city,
-      state,
-      zip,
-      country,} = reqBody;
+    const { city, state, zip, country } = reqBody;
 
     //validation
     if (!city || !userId || !state || !zip || !country) {
@@ -43,9 +39,9 @@ export async function POST(
       state,
       zip,
       country,
-    }
+    };
 
-    user.address.push(newAddress as Address)
+    user.address.push(newAddress as Address);
     //save the address
     await user.save();
     return NextResponse.json({
