@@ -1,5 +1,5 @@
 import dbConnect from "@/configs/dbconnect";
-import UserModel, { Address } from "@/models/User";
+import UserModel from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 dbConnect()
