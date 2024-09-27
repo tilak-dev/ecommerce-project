@@ -15,6 +15,7 @@ export interface Products {
 }
 
 export interface AddressType {
+  _id: string;
   city: string;
   state: string;
   zip: string;

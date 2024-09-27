@@ -1,5 +1,7 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import dbConnect from "@/configs/dbconnect";
 import UserModel from "@/models/User";
+import { getServerSession, User } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 dbConnect();
@@ -7,9 +9,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { addressId: string } }
 ) {
+  const session = await getServerSession(authOptions);
+  const user: User = session?.user as User;
+  const userId = user._id;
   try {
-    const reqBody = await request.json();
-    const { userId } = reqBody;
     const { addressId } = params;
     if (!userId || !addressId) {
       return NextResponse.json(
@@ -21,9 +24,12 @@ export async function DELETE(
       );
     }
     // check user
-    const result = await UserModel.updateOne({_id :userId}, {
-      $pull: { address: { _id: addressId } },
-    });
+    const result = await UserModel.updateOne(
+      { _id: userId },
+      {
+        $pull: { address: { _id: addressId } },
+      }
+    );
 
     if (result.modifiedCount === 0) {
       return NextResponse.json(

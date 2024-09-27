@@ -1,14 +1,19 @@
 import dbConnect from "@/configs/dbconnect";
 import UserModel from "@/models/User";
+import { getServerSession, User } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../../auth/[...nextauth]/options";
 
 dbConnect()
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
 ) {
+
+  const session = await getServerSession(authOptions)
+
+  const user:User = session?.user as User;
+     const userId = user?._id
   try {
-    const { userId } = params;
    if (!userId){
     return NextResponse.json(
       {
