@@ -14,11 +14,15 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { passwordSchema } from "@/schemas/passwordSchema";
 import { useSession } from "next-auth/react";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 export default function UpdatePassword() {
-  const {data: session} = useSession()
+  const [loading, setLoading] = useState<boolean>(false);
+  const { data: session } = useSession();
 
-  const id = session?.user._id
+  const id = session?.user._id;
   //form
   const form = useForm<z.infer<typeof passwordSchema>>({
     resolver: zodResolver(passwordSchema),
@@ -28,11 +32,53 @@ export default function UpdatePassword() {
     },
   });
 
-    //on submit form
-    function onSubmit(values: z.infer<typeof passwordSchema>) {
-      
-      console.log(values)
+  //on submit form
+  async function onSubmit(values: z.infer<typeof passwordSchema>) {
+    setLoading(true);
+    if (!id) {
+      console.log("please login first to get id");
+      toast({
+        title: "Login Required",
+        description: "Please login first to access this page",
+        duration: 3000,
+        variant: "destructive",
+      });
+      return;
     }
+
+    try {
+      const response = await axios.put(`/api/account/change-password/${id}`, {
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      });
+      if (!response) {
+        console.log("Failed to update password");
+        toast({
+          title: "Failed",
+          description:"Failed to update password" ,
+          duration: 3000,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      return toast({
+        title: "Updated",
+        description: "Password updated successfully",
+        duration: 3000,
+      });
+    } catch (error: any) {
+      console.error("Error updating password", error);
+      toast({
+        title: "Error updating Password",
+        description: error.message,
+        duration: 3000,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <div className="flex justify-center items-center h-auto ">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
@@ -79,12 +125,16 @@ export default function UpdatePassword() {
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            >
-              Update Password
-            </Button>
+            <div className=" flex justify-center items-centera">
+              <Button
+                type="submit"
+                className={` ${
+                  loading ? "cursor-not-allowed" : ""
+                } px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400`}
+              >
+                {loading ? "wait..." : "Update Password"}
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

@@ -1,10 +1,5 @@
 "use client"
 import UpdatePassword from "@/components/user/updatePassword";
-import { passwordSchema } from "@/schemas/passwordSchema";
-import React, { useState } from "react";
-import { z } from "zod";
-
-
 
 export default function page() {
   return (
