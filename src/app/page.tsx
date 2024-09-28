@@ -81,7 +81,7 @@ export default function Home() {
         <FilterItem setCategories={setCategory} setRadioGroup={setRadio} />
       </div>
       <div className=" w-3/4">
-        <h1 className="font-bold text-center text-2xl text-white">
+        <h1 className="font-bold text-center text-2xl text-black">
           All products
         </h1>
         <p>{radio && `${radio}`}</p>
