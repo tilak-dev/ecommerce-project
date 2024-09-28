@@ -24,6 +24,11 @@ export const adminLink = [
     value: "Manage Orders",
     link: "/admin/manage-orders",
   },
+  {
+    id: "5",
+    value: "Manage Users",
+    link: "/admin/manage-users",
+  },
 ];
 
 export const userLink = [

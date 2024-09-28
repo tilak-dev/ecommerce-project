@@ -5,13 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const router = useRouter()
+  const router = useRouter();
   const { data: session } = useSession();
   const hnadleOnLogout = () => {
     // Logout logic here
     try {
       signOut();
-      router.replace('/')
+      router.replace("/");
       toast({
         title: "Logged Out",
         description: "You have been logged out successfully",
@@ -63,6 +63,16 @@ export default function Navbar() {
             {session?.user.email ? (
               <>
                 <div className="flex items-center gap-x-5 justify-center">
+                  {session.user.isAdmin ? (
+                    <Link
+                      href="/admin"
+                      className="text-gray-800 py-1.5 rounded-lg px-4 border-[1px] border-indigo-700 hover:bg-emerald-900 transition duration-300 ease-in-out hover:text-white"
+                    >
+                      Admin
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                   <Link
                     href="/account"
                     className="text-gray-800 py-1.5 rounded-lg px-4 border-[1px] border-indigo-700 hover:bg-indigo-600 transition duration-300 ease-in-out hover:text-white"
