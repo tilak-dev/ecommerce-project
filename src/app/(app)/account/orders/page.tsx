@@ -121,7 +121,7 @@ export default function page() {
                 <TableCell>There is no Order : (</TableCell>
               </TableRow>
             )}
-            {order.map((or) => (
+            {order && order.map((or) => (
               <TableRow key={or._id}>
                 <TableCell className="font-medium">{or._id}</TableCell>
                 <TableCell>{or.date.toString()}</TableCell>

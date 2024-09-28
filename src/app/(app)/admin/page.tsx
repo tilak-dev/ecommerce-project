@@ -8,21 +8,20 @@ export default function AdminDetailPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Redirect to sign-in page if user is not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/signin"); // Redirect to sign-in page
+      router.push("/signin"); 
     }
   }, [status, router]);
 
   if (status === "loading") {
-    return <p>Loading...</p>; // You can add a loading spinner if needed
+    return <p>Loading...</p>;
   }
 
   if (status === "authenticated") {
     return (
       <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Admin Detail Page</h1>
+        <h1 className="text-2xl font-bold mb-4">Admin Detail</h1>
         <div className="bg-white shadow-md rounded-lg p-6">
           <h2 className="text-xl mb-2">Welcome, {session.user.username}</h2>
           <p>
@@ -43,7 +42,5 @@ export default function AdminDetailPage() {
       </div>
     );
   }
-
-  // Fallback if unauthenticated
   return <div>You are not authorized to view this page.</div>;
 }

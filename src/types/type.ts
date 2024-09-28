@@ -30,3 +30,14 @@ export interface userOrderType{
   productId: string;
   status: string;
 }
+
+export interface AdminOderType{
+  _id: string;
+  customer: string;
+  order: string;
+  customerAddress: string;
+  deliveryDate: string;
+  totalPrice: string;
+  deliveryStatus: string;
+  payment: string;
+} 
