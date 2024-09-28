@@ -21,3 +21,12 @@ export interface AddressType {
   zip: string;
   country: string;
 }
+
+export interface userOrderType{
+  _id: string;
+  date: Date;
+  address: string;
+  totalPrice: number;
+  productId: string;
+  status: string;
+}
