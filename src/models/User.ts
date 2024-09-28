@@ -1,4 +1,42 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
+
+export interface userOrder extends Document {
+  date: Date;
+  address: string;
+  totalPrice: number;
+  productId: Types.ObjectId;
+  status: string;
+}
+
+const userOrderSchema: Schema<userOrder> = new Schema(
+  {
+    date: {
+      type: Date,
+      default: Date.now,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    productId: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "products",
+        required: true,
+      },
+    ],
+    status: {
+      type: String,
+      required: true,
+      enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
+    },
+  },
+  { timestamps: true }
+);
 
 export interface Address extends Document {
   city: string;
@@ -37,7 +75,7 @@ export interface User extends Document {
   isAdmin?: boolean;
   address: Address[];
   phone?: string;
-  orders?: string[];
+  orders: userOrder[];
 }
 
 const userSchema: Schema<User> = new Schema(
@@ -69,7 +107,7 @@ const userSchema: Schema<User> = new Schema(
       type: String,
       default: null,
     },
-    orders: [],
+    orders: [userOrderSchema],
   },
   {
     timestamps: true,
