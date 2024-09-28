@@ -1,6 +1,7 @@
 "use client";
 import CartComponent from "@/components/CartComponent";
 import { useCart } from "@/context/CartProvider";
+import Link from "next/link";
 import React from "react";
 
 const CartPage = () => {
@@ -17,7 +18,7 @@ const CartPage = () => {
           {cart &&
             cart.map((cart) => (
               <CartComponent
-                key={cart._id} 
+                key={cart._id}
                 product={cart}
                 onBuy={handleOnBuy}
               />
@@ -26,14 +27,14 @@ const CartPage = () => {
         {cart.length > 0 && (
           <div className="flex justify-center items-center w-1/4 flex-col ">
             <div className="">
-              Total Price: ${cart.reduce((acc, cur) => acc + cur.price * cur.quantity, 0)}.00
+              Total Price: $
+              {cart.reduce((acc, cur) => acc + cur.price * cur.quantity, 0)}.00
             </div>
             <button className="bg-blue-500 text-white py-2 px-4 rounded-md">
-              Checkout
+              <Link href={"/checkout"}>Checkout</Link>
             </button>
           </div>
         )}
-
       </div>
 
       {cart.length < 1 && (

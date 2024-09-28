@@ -1,5 +1,6 @@
 import React from "react";
 import EditProducts from "./EditProduct";
+import { useCategory } from "@/context/CategoryProvide";
 
 interface ProductDetailProps {
   id: string;
@@ -22,6 +23,8 @@ const AdminProductDetail = ({
   quantity,
   onDelete,
 }: ProductDetailProps) => {
+  const [categoryStore] = useCategory()
+  const categoryName = categoryStore.find((cat) => cat._id === category)?.categoryName || "not available"
   return (
     <>
       {" "}
@@ -39,7 +42,7 @@ const AdminProductDetail = ({
           <div className="mb-6 ">
             <h1 className="text-3xl font-bold text-gray-800 mb-4">{title}</h1>
             <p className="text-gray-600 text-sm mb-2">
-              <span className="font-bold">Category:</span> {category}
+              <span className="font-bold">Category:</span> {categoryName}
             </p>
             <p className="text-gray-600 text-sm mb-6">{description}</p>
             <div className=" flex justify-between">

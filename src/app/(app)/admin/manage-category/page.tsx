@@ -13,41 +13,13 @@ import { useToast } from "@/hooks/use-toast";
 import { ApiResponse } from "@/types/ApiRespnse";
 import EditModel from "@/components/admin/category/EditModel";
 import { AddCategory } from "@/components/admin/category/AddCategory";
-import { Catecories } from "@/types/type";
+import { useCategory } from "@/context/CategoryProvide";
 
 export default function page() {
   const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
-  const [catList, setCatList] = useState<Catecories[]>([]);
-
-  //fetched data
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get("/api/category/all-category");
-      if (!response) {
-        console.log("No category");
-        toast({
-          title: "No Categories",
-          description: "No categories found",
-          duration: 3000,
-          variant: "destructive",
-        });
-        return;
-      }
-      setCatList(response.data.data);
-    } catch (error) {
-      console.log("Error fetching categories", error);
-      toast({
-        title: "Error fetching Categories",
-        description: "Failed to fetch categories",
-        duration: 3000,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [categoryStore,setCategoryStore] = useCategory()
+  // console.log(categoryStore)
   //handle on delete
   const handleOnDelete = async (id: string) => {
     try {
@@ -65,7 +37,7 @@ export default function page() {
         console.log("error in deleting");
         return;
       }
-      setCatList(catList.filter((cat) => cat._id !== id));
+      setCategoryStore(categoryStore.filter((cat) => cat._id !== id));
       toast({
         title: "Deleted Successfully",
         description: response.data.message,
@@ -85,9 +57,6 @@ export default function page() {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    fetchCategories();
-  }, []);
   return (
     <div className="flex flex-col text-black">
       <h1 className="text-3xl text-center text-black font-bold mb-6">
@@ -108,8 +77,8 @@ export default function page() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {catList &&
-              catList.map((cat) => (
+            {categoryStore &&
+              categoryStore.map((cat) => (
                 <TableRow key={cat._id}>
                   <TableCell className="font-medium">{cat._id}</TableCell>
                   <TableCell>{cat.categoryName}</TableCell>
@@ -128,7 +97,7 @@ export default function page() {
               ))}
           </TableBody>
         </Table>
-        {catList.length < 1 && !loading && (
+        {categoryStore.length < 1 && !loading && (
           <>
             {" "}
             <h1 className="text-center py-3">There is no Category</h1>

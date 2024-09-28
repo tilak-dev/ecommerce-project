@@ -1,8 +1,8 @@
 import React from "react";
 import TextLimit from "../TextLimit";
-import { useRouter } from "next/navigation";
 import { Products } from "@/types/type";
 import { AddToCartButton } from "../CustomBotton";
+import { useCategory } from "@/context/CategoryProvide";
 interface ProductCard {
   id: string;
   title: string;
@@ -24,14 +24,15 @@ const ProductCard = ({
   quantity,
   product
 }: ProductCard) => {
-  const router = useRouter()
+  const [categoryStore] = useCategory()
+  const categoryName = categoryStore.find(c => c._id === category)?.categoryName || "not available" 
   return (
     <div className="max-w-sm rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-700 ease-in-out  bg-white border border-gray-200 transform  ">
       <img className="w-full h-52 object-cover" src={image} alt={title} />
       <div className="px-6 py-4">
         <div className="font-bold text-xl mb-1 text-gray-900">{title}</div>
         <p className="text-gray-500 text-sm mb-1 italic">
-          Category: {category}
+          Category: {categoryName}
         </p>
         <p className="cursor-pointer text-gray-600 text-sm mb-2.5">
           
@@ -43,7 +44,6 @@ const ProductCard = ({
           <div className="">
             {/* edit button */}
             <button
-              onClick={() => router.push(`/product/${id}`)}
               className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300"
             >Detail</button>
           </div>
