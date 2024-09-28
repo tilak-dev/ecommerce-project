@@ -4,25 +4,31 @@ import { getServerSession, User } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
-dbConnect()
-export async function GET(
-  request: NextRequest,
-) {
+dbConnect();
+export async function GET(request: NextRequest) {
+  const session = await getServerSession(authOptions);
 
-  const session = await getServerSession(authOptions)
-
-  const user:User = session?.user as User;
-     const userId = user?._id
-  try {
-   if (!userId){
+  const user: User = session?.user as User;
+  if (!session || !session.user) {
     return NextResponse.json(
       {
         success: false,
-        message: "User not found",
+        message: "Session not found",
       },
       { status: 404 }
     );
-   }
+  }
+  const userId = user?._id;
+  try {
+    if (!userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User not found",
+        },
+        { status: 404 }
+      );
+    }
     // check user
     const user = await UserModel.findById(userId);
     if (!user) {
@@ -34,7 +40,7 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json({
       success: true,
       message: "order added successfully",

@@ -11,7 +11,15 @@ export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
 
   const user: User = session?.user as User;
-
+  if (!session || !session.user) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Session not found",
+      },
+      { status: 404 }
+    );
+  }
   const userId = user._id;
 
   try {

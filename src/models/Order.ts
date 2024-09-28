@@ -27,6 +27,7 @@ export const orderSchema: Schema<Order> = new Schema(
     deliveryDate: {
       type: String,
       required: true,
+      default: new Date().toISOString(),
     },
     totalPrice: {
       type: String,
@@ -40,6 +41,7 @@ export const orderSchema: Schema<Order> = new Schema(
     payment: {
       type: String,
       required: true,
+      enum: ["cash on delivery", "online payment"],
     },
   },
   { timestamps: true }
