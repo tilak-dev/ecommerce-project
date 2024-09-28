@@ -13,9 +13,7 @@ export async function middleware(request: NextRequest) {
 
   const adminPath =
     path.startsWith("/admin") ||
-    path.startsWith("/admin/manage-category") ||
-    path.startsWith("/admin/manage-product") ||
-    path.startsWith("/admin/create-product");
+    path.startsWith("/admin/:path*")
 
   console.log(token);
   if (token && publicPath) {
@@ -43,9 +41,7 @@ export const config = {
   matcher: [
     "/signin",
     "/admin",
-    "/admin/manage-category",
-    "/admin/create-product",
-    "/admin/manage-product",
+    "/admin/:path*",
     "/signup",
     "/",
     "/account",
