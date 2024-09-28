@@ -1,7 +1,6 @@
 import dbConnect from "@/configs/dbconnect";
 import { Product } from "@/models/Product";
 import { NextRequest, NextResponse } from "next/server";
-import slugify from "slugify";
 
 dbConnect();
 

@@ -2,6 +2,15 @@
 import React, { useEffect, useState } from "react";
 
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -14,6 +23,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { AdminOderType } from "@/types/type";
+import { updateOrder } from "@/data/order";
 
 const invoices = [
   {
@@ -51,6 +61,7 @@ const invoices = [
 export default function page() {
   const [order, setOrder] = useState<AdminOderType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [active, setActive] = useState<string>();
 
   const fetchOrders = async () => {
     try {
@@ -133,7 +144,7 @@ export default function page() {
       <div className="">
         <Table>
           <TableCaption>A list of recent orders.</TableCaption>
-          <TableHeader>
+          <TableHeader className=" text-xs">
             <TableRow>
               <TableHead className="">Order Id</TableHead>
               <TableHead>Customer</TableHead>
@@ -151,7 +162,7 @@ export default function page() {
                 <TableCell className="text-lg">Loading...</TableCell>
               </TableRow>
             )}
-            {!loading && order.length < 1 && (
+            {!loading && !order.length && (
               <TableRow>
                 <TableCell className="text-lg">There is no Order</TableCell>
               </TableRow>
@@ -166,11 +177,40 @@ export default function page() {
                   <TableCell className="">
                     {item.deliveryDate.toString()}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-center">
                     {item.totalPrice}
                   </TableCell>
-                  <TableCell className="text-right">
-                    {item.deliveryStatus}
+                  <TableCell className="text-center">
+                    <div className="">
+                      <Select onValueChange={(value) => setActive(value)}>
+                        <SelectTrigger
+                          className={`${
+                            active === "pending" && "bg-amber-700"
+                          } ${active === "processing" && "bg-green-500"}  ${
+                            active === "shipped" && "bg-cyan-600"
+                          } 
+                           ${active === "delivered" && "bg-green-700"}  
+                           ${active === "cancelled" && "bg-red-700"}  
+                          focus:border-none focus:outline-none`}
+                        >
+                          <SelectValue placeholder={`${item.deliveryStatus}`} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {updateOrder &&
+                              updateOrder.map((action) => (
+                                <SelectItem
+                                  key={action.id}
+                                  value={action.value}
+                                >
+                                  {action.value}
+                                </SelectItem>
+                              ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {/* {item.deliveryStatus} */}
                   </TableCell>
                   <TableCell className="text-right">{item.payment}</TableCell>
                 </TableRow>
