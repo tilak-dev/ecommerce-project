@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json();
     const { order, customerAddress, totalPrice, payment, productId } = reqBody;
     //validation
+    console.log(reqBody)
     if (totalPrice < 1) {
       return NextResponse.json(
         {
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           message:
-            "Order, customerAddress, totalPrice and payment method are required",
+            "Order, customerAddress and payment method are required",
         },
         { status: 400 }
       );
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
     }
 
     //save order
-    const newOrder = new UserModel({
+    const newOrder = ({
       customer: user._id,
       order,
       customerAddress,
@@ -93,7 +94,6 @@ export async function POST(request: NextRequest) {
     user.orders.push(newUserOrder as userOrder);
     //save the address
     await user.save();
-    await newOrder.save();
 
     return NextResponse.json({
       success: true,
@@ -106,6 +106,7 @@ export async function POST(request: NextRequest) {
       {
         success: false,
         message: "Error in creating order",
+        error
       },
       { status: 500 }
     );
