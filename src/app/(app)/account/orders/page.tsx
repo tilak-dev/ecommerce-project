@@ -57,6 +57,41 @@ export default function page() {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  // delete order
+  const handleDeleteOrder = async (orderId: string) => {
+    try {
+      setLoading(true);
+      const response = await axios.delete(
+        `/api/user-order/cencel-order/${orderId}`
+      );
+      if (!response) {
+        toast({
+          title: "Failed to delete order",
+          description: "Please try again later",
+          duration: 3000,
+          variant: "destructive",
+        });
+        console.log("Error deleting order");
+      }
+      toast({
+        title: "Deleted order",
+        description: "Order deleted successfully",
+        duration: 3000,
+        variant: "default",
+      });
+      fetchOrders();
+      setLoading(false);
+    } catch (error) {
+      toast({
+        title: "Failed to delete order",
+        description: "Failed to delete order due to server",
+        duration: 3000,
+        variant: "destructive",
+      });
+      console.log(error);
+    }
+  };
   return (
     <div className="w-10/12">
       <div className="">
@@ -93,7 +128,15 @@ export default function page() {
                 <TableCell>{or.address}</TableCell>
                 <TableCell className="text-right">{or.totalPrice}</TableCell>
                 <TableCell className="text-right">{or.status}</TableCell>
-                <TableCell className="text-right">action</TableCell>
+                <TableCell className="text-right">
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                    onClick={() => handleDeleteOrder(or._id)}
+                    disabled={loading ? true : false}
+                  >
+                    Cancel
+                  </button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
