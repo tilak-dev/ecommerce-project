@@ -2,25 +2,17 @@
 import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import axios from "axios";
 import { price } from "@/data/price";
 import { toast } from "@/hooks/use-toast";
-import { Catecories } from "@/types/type";
-import { useCategory } from "@/context/CategoryProvide";
 import { useFilterProduct } from "@/context/FilterProvider";
+import { Catecories } from "@/types/type";
 
-export default function FilterItem() {
-  const [
-    productArray,
-    setProductArray,
-    category,
-    setCategory,
-    radio,
-    setRadio,
-    loading,
-    setLoading,
-  ] = useFilterProduct();
-  const [catList] = useCategory();
+interface FilterItemProps {
+  catList: Catecories[];
+}
+
+export default function FilterItem({catList}: FilterItemProps) {
+  const [productArray, setProductArray,category, setCategory,radio, setRadio,loading, setLoading] = useFilterProduct()
 
   const handleCategoryChange = (categoryId: string) => {
     setCategory((catArray) =>
@@ -32,7 +24,7 @@ export default function FilterItem() {
       title: "Category selected",
       description: `Category ${categoryId} selected`,
       duration: 3000,
-    });
+    })
   };
   const handleOnRadioValue = (value: string) => {
     const parsedValues = value.split(",").map(Number);
@@ -42,12 +34,12 @@ export default function FilterItem() {
   const handleOnReset = () => {
     setCategory([]); // Clear selected categories
     setRadio(undefined); // Clear price filter
-    window.location.reload(); // Refresh the page
+    window.location.reload() // Refresh the page
     toast({
       title: "Filters Reset",
       description: "Filters reset",
       duration: 3000,
-    });
+    })
   };
 
   return (
@@ -58,7 +50,7 @@ export default function FilterItem() {
           <h1 className="  flex flex-col gap-y-2">Filter by Category</h1>
           <hr className="font-extrabold my-3" />
           {/* Display the category list */}
-          {loading && <div>Loading...</div>}
+          {/* {loading  && catList.length && <div>Loading...</div>} */}
           {catList &&
             catList.map((cat) => (
               <div key={cat._id} className="flex items-center space-x-2 mb-2">
@@ -98,12 +90,7 @@ export default function FilterItem() {
           </div>
         </div>
         <div className="text-center py-4">
-          <button
-            className="text-sm px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-500"
-            onClick={handleOnReset}
-          >
-            Reset
-          </button>
+          <button className="text-sm px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-500" onClick={handleOnReset}>Reset</button>
         </div>
       </div>
     </div>

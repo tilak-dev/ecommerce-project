@@ -1,17 +1,19 @@
 "use client";
 import FilterItem from "@/components/user/FilterItem";
 import ProductCard from "@/components/user/productCard";
+import { useCategory } from "@/context/CategoryProvide";
 import { useFilterProduct } from "@/context/FilterProvider";
 import React from "react";
 
 export default function Home() {
+  const [categoryStore] = useCategory();
   const [productArray, setProductArray,category, setCategory,radio, setRadio,loading, setLoading] =
     useFilterProduct();
 
   return (
     <main className="flex w-full pt-4 text-black">
       <div className="w-1/4">
-        <FilterItem />
+        <FilterItem catList={categoryStore} />
       </div>
       <div className=" w-3/4">
         <h1 className="font-bold text-center text-2xl text-black">
