@@ -71,6 +71,8 @@ export default function page() {
       setLoading(true);
       const response = await axios.put(`/api/order/update-order/${orderId}`, {
         deliveryStatus: active,
+        userId :"",
+        userOrderId: ""
       });
       if (!response) {
         toast({

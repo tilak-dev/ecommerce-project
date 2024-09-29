@@ -4,6 +4,7 @@ import dbConnect from "@/configs/dbconnect";
 import { getServerSession, User } from "next-auth";
 import UserModel, { userOrder } from "@/models/User";
 import { Product } from "@/models/Product";
+import orderModel from "@/models/Order";
 
 export async function POST(request: NextRequest) {
   await dbConnect();
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
     }
 
     //save order
-    const newOrder = ({
+    const newOrder = new orderModel({
       customer: user._id,
       order,
       customerAddress,
@@ -94,6 +95,7 @@ export async function POST(request: NextRequest) {
     user.orders.push(newUserOrder as userOrder);
     //save the address
     await user.save();
+    await newOrder.save()
 
     return NextResponse.json({
       success: true,
