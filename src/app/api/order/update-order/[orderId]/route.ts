@@ -11,8 +11,10 @@ export async function PUT(
 ) {
   try {
     const reqBody = await request.json();
+    console.log(reqBody);
     const { deliveryStatus, userId, userOrderId } = reqBody;
     const { orderId } = params;
+
     if (!orderId) {
       return NextResponse.json(
         {
@@ -53,7 +55,6 @@ export async function PUT(
     //updating user order
 
     if (response) {
-      
       const result = await UserModel.updateOne(
         { _id: userId, "orders._id": userOrderId },
         {

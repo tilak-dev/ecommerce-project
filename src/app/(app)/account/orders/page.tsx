@@ -121,24 +121,33 @@ export default function page() {
                 <TableCell>There is no Order : (</TableCell>
               </TableRow>
             )}
-            {order && order.map((or) => (
-              <TableRow key={or._id}>
-                <TableCell className="font-medium">{or._id}</TableCell>
-                <TableCell>{or.date.toString()}</TableCell>
-                <TableCell>{or.address}</TableCell>
-                <TableCell className="text-right">{or.totalPrice}</TableCell>
-                <TableCell className="text-right">{or.status}</TableCell>
-                <TableCell className="text-right">
-                  <button
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-                    onClick={() => handleDeleteOrder(or._id)}
-                    disabled={loading ? true : false}
-                  >
-                    Cancel
-                  </button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {order &&
+              order.map((or) => (
+                <TableRow key={or._id}>
+                  <TableCell className="font-medium">{or._id}</TableCell>
+                  <TableCell>{or.date.toString()}</TableCell>
+                  <TableCell>{or.address}</TableCell>
+                  <TableCell className="text-right">{or.totalPrice}</TableCell>
+                  <TableCell className="text-right">{or.status}</TableCell>
+                  <TableCell className="text-right">
+                    <button
+                      className={` bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors ${
+                        or.status === "delivered" && "cursor-not-allowed"
+                      }`}
+                      onClick={() => handleDeleteOrder(or._id)}
+                      disabled={
+                        loading
+                          ? true
+                          : false || or.status === "delivered"
+                          ? true
+                          : false
+                      }
+                    >
+                      {or.status === "delivered" ? "Return" : "Cencel"}
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
           <TableFooter>
             {!loading && order.length > 0 && (

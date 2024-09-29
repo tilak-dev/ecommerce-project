@@ -28,6 +28,8 @@ export default function page() {
   const [order, setOrder] = useState<AdminOderType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [active, setActive] = useState<string>();
+  const [userOrderId, setUserOrderId] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
 
   const fetchOrders = async () => {
     try {
@@ -63,16 +65,15 @@ export default function page() {
     fetchOrders();
   }, [order.length]);
 
-  // delete order
-   // delete order
+  //handle on update Order
    const handleUpdateOrder = async (orderId: string) => {
     // console.log(orderId)
     try {
       setLoading(true);
       const response = await axios.put(`/api/order/update-order/${orderId}`, {
         deliveryStatus: active,
-        userId :"",
-        userOrderId: ""
+        userId :"66f5f91d45b0d7ed42d9a34a",
+        userOrderId: "66f8afe4520352fc0cadb872",
       });
       if (!response) {
         toast({
@@ -99,6 +100,8 @@ export default function page() {
         variant: "destructive",
       });
       console.log(error);
+    }finally{
+      setLoading(false);
     }
   };
   return (
@@ -143,7 +146,7 @@ export default function page() {
                     {item.deliveryDate.toString()}
                   </TableCell>
                   <TableCell className="text-center">
-                    {item.totalPrice}
+                    ${item.totalPrice}.00
                   </TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center gap-x-2">
@@ -193,6 +196,7 @@ export default function page() {
                           focus:border-none focus:outline-none  placeholder:text-black `}
                             >
                               {active ? active : item.deliveryStatus}
+                              
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
