@@ -1,20 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -53,12 +42,7 @@ export default function page() {
         });
         console.log("Error fetching orders");
       }
-      toast({
-        title: "Fetched orders",
-        description: "Orders fetched successfully",
-        duration: 3000,
-        variant: "default",
-      });
+    
       // console.log(response.data.data)
       setOrder(response.data.data);
       setLoading(false);
@@ -129,8 +113,8 @@ export default function page() {
               {/* <TableHead>Customer</TableHead> */}
               <TableHead>Order</TableHead>
               <TableHead>Address</TableHead>
-              <TableHead className="">Delgivery Date</TableHead>
-              <TableHead className="">Delhivery Price </TableHead>
+              <TableHead className="">Delivery Date</TableHead>
+              <TableHead className="">Delivery Price </TableHead>
               <TableHead className="text-center">Delhivery Status</TableHead>
               <TableHead className="text-right">Payment Method</TableHead>
             </TableRow>
@@ -165,7 +149,27 @@ export default function page() {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
-                              className={`${
+                            value={active}
+                              className={`
+                                 ${
+                              item.deliveryStatus === "pending" &&
+                                "bg-amber-700 text-white hover:bg-amber-700"
+                              } ${
+                                item.deliveryStatus === "processing" &&
+                                "bg-green-400 text-white  hover:bg-green-500"
+                              }  ${
+                                item.deliveryStatus === "shipped" &&
+                                "bg-blue-600 hover:bg-blue-700 text-white"
+                              } 
+                           ${
+                            item.deliveryStatus === "delivered" &&
+                             "bg-green-700 hover:bg-green-700  text-white"
+                           }  
+                           ${
+                            item.deliveryStatus === "cancelled" &&
+                             "bg-red-700 hover:bg-red-700 text-white"
+                           }  
+                                ${
                                 active === "pending" &&
                                 "bg-amber-700 text-white hover:bg-amber-700"
                               } ${
@@ -183,24 +187,7 @@ export default function page() {
                              active === "cancelled" &&
                              "bg-red-700 hover:bg-red-700 text-white"
                            }  
-                             ${
-                              item.deliveryStatus === "pending" &&
-                                "bg-amber-700 text-white hover:bg-amber-700"
-                              } ${
-                                item.deliveryStatus === "processing" &&
-                                "bg-green-500 text-white"
-                              }  ${
-                                item.deliveryStatus === "shipped" &&
-                                "bg-blue-600 hover:bg-blue-700 text-white"
-                              } 
-                           ${
-                            item.deliveryStatus === "delivered" &&
-                             "bg-green-700 hover:bg-green-700  text-white"
-                           }  
-                           ${
-                            item.deliveryStatus === "cancelled" &&
-                             "bg-red-700 hover:bg-red-700 text-white"
-                           }  
+                            
                           focus:border-none focus:outline-none  placeholder:text-black `}
                             >
                               {active ? active : item.deliveryStatus}
