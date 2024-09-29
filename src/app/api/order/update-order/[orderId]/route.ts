@@ -1,7 +1,7 @@
 import dbConnect from "@/configs/dbconnect";
-import { Product } from "@/models/Product";
+import orderModel from "@/models/Order";
 import { NextRequest, NextResponse } from "next/server";
-
+  
 dbConnect();
 
 export async function PUT(
@@ -21,13 +21,15 @@ export async function PUT(
         { status: 400 }
       );
     }
-    const response = await Product.findByIdAndUpdate(
+
+    const response = await orderModel.findByIdAndUpdate(
       orderId,
       {
         deliveryStatus,
       },
       { new: true }
     );
+    console.log(response)
     if (!response) {
       return NextResponse.json(
         {

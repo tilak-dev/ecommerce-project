@@ -10,6 +10,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -24,39 +34,6 @@ import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { AdminOderType } from "@/types/type";
 import { updateOrder } from "@/data/order";
-
-const invoices = [
-  {
-    id: "00001",
-    customer: "Tilak devs",
-    orderedProduct: "Shoes",
-    date: "27/07/2024",
-    totalAmount: "$250.00",
-    address: "New Delhi, Delhi , India - 110028",
-    status: "Delivered",
-    paymentMethod: "Dabit Card",
-  },
-  {
-    id: "00002",
-    customer: "Tilak devs",
-    orderedProduct: "Shoes",
-    date: "27/07/2024",
-    totalAmount: "$250.00",
-    address: "New Delhi, Delhi , India - 110028",
-    status: "Delivered",
-    paymentMethod: "Dabit Card",
-  },
-  {
-    id: "00003",
-    customer: "Tilak devs",
-    orderedProduct: "Shoes",
-    date: "27/07/2024",
-    totalAmount: "$250.00",
-    address: "New Delhi, Delhi , India - 110028",
-    status: "Delivered",
-    paymentMethod: "Dabit Card",
-  },
-];
 
 export default function page() {
   const [order, setOrder] = useState<AdminOderType[]>([]);
@@ -100,27 +77,29 @@ export default function page() {
   };
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [order.length]);
 
   // delete order
-  const handleDeleteOrder = async (orderId: string) => {
+   // delete order
+   const handleUpdateOrder = async (orderId: string) => {
+    // console.log(orderId)
     try {
       setLoading(true);
-      const response = await axios.delete(
-        `/api/user-order/cencel-order/${orderId}`
-      );
+      const response = await axios.put(`/api/order/update-order/${orderId}`, {
+        deliveryStatus: active,
+      });
       if (!response) {
         toast({
-          title: "Failed to delete order",
+          title: "Failed to update order",
           description: "Please try again later",
           duration: 3000,
           variant: "destructive",
         });
-        console.log("Error deleting order");
+        console.log("Error in updating order");
       }
       toast({
-        title: "Deleted order",
-        description: "Order deleted successfully",
+        title: "Order updated successfully",
+        description: "Order updated successfully",
         duration: 3000,
         variant: "default",
       });
@@ -128,8 +107,8 @@ export default function page() {
       setLoading(false);
     } catch (error) {
       toast({
-        title: "Failed to delete order",
-        description: "Failed to delete order due to server",
+        title: "Failed to update order",
+        description: "Failed to update order due to server",
         duration: 3000,
         variant: "destructive",
       });
@@ -147,12 +126,12 @@ export default function page() {
           <TableHeader className=" text-xs">
             <TableRow>
               <TableHead className="">Order Id</TableHead>
-              <TableHead>Customer</TableHead>
+              {/* <TableHead>Customer</TableHead> */}
               <TableHead>Order</TableHead>
               <TableHead>Address</TableHead>
               <TableHead className="">Delgivery Date</TableHead>
               <TableHead className="">Delhivery Price </TableHead>
-              <TableHead className="text-right">Delhivery Status</TableHead>
+              <TableHead className="text-center">Delhivery Status</TableHead>
               <TableHead className="text-right">Payment Method</TableHead>
             </TableRow>
           </TableHeader>
@@ -171,7 +150,7 @@ export default function page() {
               order.map((item) => (
                 <TableRow key={item._id}>
                   <TableCell className="font-medium">{item._id}</TableCell>
-                  <TableCell>{item.customer}</TableCell>
+                  {/* <TableCell>{item.customer}</TableCell> */}
                   <TableCell>{item.order}</TableCell>
                   <TableCell>{item.customerAddress}</TableCell>
                   <TableCell className="">
@@ -181,35 +160,82 @@ export default function page() {
                     {item.totalPrice}
                   </TableCell>
                   <TableCell className="text-center">
-                    <div className="">
-                      <Select onValueChange={(value) => setActive(value)}>
-                        <SelectTrigger
-                          className={`${
-                            active === "pending" && "bg-amber-700"
-                          } ${active === "processing" && "bg-green-500"}  ${
-                            active === "shipped" && "bg-cyan-600"
-                          } 
-                           ${active === "delivered" && "bg-green-700"}  
-                           ${active === "cancelled" && "bg-red-700"}  
-                          focus:border-none focus:outline-none`}
+                    <div className="flex items-center gap-x-2">
+                      <div className="">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              className={`${
+                                active === "pending" &&
+                                "bg-amber-700 text-white hover:bg-amber-700"
+                              } ${
+                                active === "processing" &&
+                                "bg-green-500 text-white"
+                              }  ${
+                                active === "shipped" &&
+                                "bg-blue-600 hover:bg-blue-700 text-white"
+                              } 
+                           ${
+                             active === "delivered" &&
+                             "bg-green-700 hover:bg-green-700  text-white"
+                           }  
+                           ${
+                             active === "cancelled" &&
+                             "bg-red-700 hover:bg-red-700 text-white"
+                           }  
+                             ${
+                              item.deliveryStatus === "pending" &&
+                                "bg-amber-700 text-white hover:bg-amber-700"
+                              } ${
+                                item.deliveryStatus === "processing" &&
+                                "bg-green-500 text-white"
+                              }  ${
+                                item.deliveryStatus === "shipped" &&
+                                "bg-blue-600 hover:bg-blue-700 text-white"
+                              } 
+                           ${
+                            item.deliveryStatus === "delivered" &&
+                             "bg-green-700 hover:bg-green-700  text-white"
+                           }  
+                           ${
+                            item.deliveryStatus === "cancelled" &&
+                             "bg-red-700 hover:bg-red-700 text-white"
+                           }  
+                          focus:border-none focus:outline-none  placeholder:text-black `}
+                            >
+                              {active ? active : item.deliveryStatus}
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuRadioGroup
+                              value={active}
+                              onValueChange={setActive}
+                            >
+                              {updateOrder &&
+                                updateOrder.map((item) => (
+                                  <DropdownMenuRadioItem
+                                    key={item.id}
+                                    value={item.value}
+                                  >
+                                    {item.value}
+                                  </DropdownMenuRadioItem>
+                                ))}
+                            </DropdownMenuRadioGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      <div className="">
+                        <Button
+                          className="bg-indigo-600 hover:bg-indigo-700"
+                          onClick={() => handleUpdateOrder(item._id)}
+                          disabled={loading ? true : false}
                         >
-                          <SelectValue placeholder={`${item.deliveryStatus}`} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {updateOrder &&
-                              updateOrder.map((action) => (
-                                <SelectItem
-                                  key={action.id}
-                                  value={action.value}
-                                >
-                                  {action.value}
-                                </SelectItem>
-                              ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                          Update
+                        </Button>
+                      </div>
                     </div>
+
                     {/* {item.deliveryStatus} */}
                   </TableCell>
                   <TableCell className="text-right">{item.payment}</TableCell>
