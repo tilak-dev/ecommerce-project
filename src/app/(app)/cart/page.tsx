@@ -4,7 +4,6 @@ import { useCart } from "@/context/CartProvider";
 import { toast } from "@/hooks/use-toast";
 import { Products } from "@/types/type";
 import axios from "axios";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const CartPage = () => {

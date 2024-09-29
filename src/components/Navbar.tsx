@@ -3,12 +3,13 @@ import { toast } from "@/hooks/use-toast";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import React from "react";
+import SearchCategory from "./SearchCategory";
 
 export default function Navbar() {
   const router = useRouter();
   const { data: session } = useSession();
   const hnadleOnLogout = () => {
-    // Logout logic here
     try {
       signOut();
       router.replace("/");
@@ -32,7 +33,8 @@ export default function Navbar() {
         </div>
 
         {/* Search Bar */}
-        <form action="">
+        <SearchCategory />
+        {/* <form action="">
           <div className="flex items-center space-x-2">
             <input
               type="text"
@@ -43,7 +45,7 @@ export default function Navbar() {
               Search
             </button>
           </div>
-        </form>
+        </form> */}
 
         {/* Navigation & Icons */}
         <div className="flex items-center space-x-6">

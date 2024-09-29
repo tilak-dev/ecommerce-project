@@ -6,55 +6,24 @@ import axios from "axios";
 import { price } from "@/data/price";
 import { toast } from "@/hooks/use-toast";
 import { Catecories } from "@/types/type";
+import { useCategory } from "@/context/CategoryProvide";
+import { useFilterProduct } from "@/context/FilterProvider";
 
-interface props {
-  setCategories: React.Dispatch<React.SetStateAction<string[]>>;
-  setRadioGroup: React.Dispatch<React.SetStateAction<number[] | undefined>>;
-}
-export default function FilterItem({ setCategories, setRadioGroup }: props) {
-  const [catList, setCatList] = useState<Catecories[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  //fetched data;
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get("/api/category/all-category");
-      if (!response) {
-        console.log("No category");
-        toast({
-          title: "No Categories",
-          description: "No categories found",
-          duration: 3000,
-          variant: "destructive",
-        })
-        return;
-      }
-      setCatList(response.data.data);
-      toast({
-        title: "Category added",
-        description: response.data.message,
-        duration: 3000,
-      })
-      // console.log(response.data.result);
-    } catch (error) {
-      console.log("Error fetching categories", error);
-      toast({
-        title: "Error fetching Categories",
-        description: "Failed to fetch categories",
-        duration: 3000,
-        variant: "destructive",
-      })
-      setLoading(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+export default function FilterItem() {
+  const [
+    productArray,
+    setProductArray,
+    category,
+    setCategory,
+    radio,
+    setRadio,
+    loading,
+    setLoading,
+  ] = useFilterProduct();
+  const [catList] = useCategory();
 
   const handleCategoryChange = (categoryId: string) => {
-    setCategories((catArray) =>
+    setCategory((catArray) =>
       catArray.includes(categoryId)
         ? catArray.filter((id) => id !== categoryId)
         : [...catArray, categoryId]
@@ -63,22 +32,22 @@ export default function FilterItem({ setCategories, setRadioGroup }: props) {
       title: "Category selected",
       description: `Category ${categoryId} selected`,
       duration: 3000,
-    })
+    });
   };
   const handleOnRadioValue = (value: string) => {
     const parsedValues = value.split(",").map(Number);
-    setRadioGroup(parsedValues);
+    setRadio(parsedValues);
   };
 
   const handleOnReset = () => {
-    setCategories([]); // Clear selected categories
-    setRadioGroup(undefined); // Clear price filter
-    window.location.reload() // Refresh the page
+    setCategory([]); // Clear selected categories
+    setRadio(undefined); // Clear price filter
+    window.location.reload(); // Refresh the page
     toast({
       title: "Filters Reset",
       description: "Filters reset",
       duration: 3000,
-    })
+    });
   };
 
   return (
@@ -128,8 +97,13 @@ export default function FilterItem({ setCategories, setRadioGroup }: props) {
             </RadioGroup>
           </div>
         </div>
-        <div className="">
-          <button onClick={handleOnReset}>RESET FILTERS</button>
+        <div className="text-center py-4">
+          <button
+            className="text-sm px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-500"
+            onClick={handleOnReset}
+          >
+            Reset
+          </button>
         </div>
       </div>
     </div>

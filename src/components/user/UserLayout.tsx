@@ -15,7 +15,7 @@ export default function UserLayout() {
       <div className="py-4 px-6">
         {/* Admin Title */}
         <div className="text-center font-extrabold font-mono text-2xl mb-8">
-          Admin Control
+          User Control
         </div>
 
         {/* Navigation Links */}
