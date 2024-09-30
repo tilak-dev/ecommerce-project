@@ -5,7 +5,7 @@ import { AddToCartButton } from "../CustomBotton";
 import { useCategory } from "@/context/CategoryProvide";
 interface ProductCard {
   id: string;
-  title: string;
+  name: string;
   description: string;
   price: number;
   image: string;
@@ -16,7 +16,7 @@ interface ProductCard {
 
 const ProductCard = ({
   id,
-  title,
+  name,
   description,
   image,
   price,
@@ -30,9 +30,9 @@ const ProductCard = ({
     "not available";
   return (
     <div className="max-w-sm rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-700 ease-in-out  bg-white border border-gray-200 transform  ">
-      <img className="w-full h-52 object-cover" src={image} alt={title} />
+      <img className="w-full h-52 object-cover" src={image} alt={name} />
       <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-1 text-gray-900">{title}</div>
+        <div className="font-bold text-xl mb-1 text-gray-900">{name}</div>
         <p className="text-gray-500 text-sm mb-1 italic">
           Category: {categoryName}
         </p>

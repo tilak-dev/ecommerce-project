@@ -112,11 +112,12 @@ export default function page() {
           </TableHeader>
 
           <TableBody>
-            {loading ? (
+            {loading && (
               <TableRow>
                 <TableCell className="text-center">loading...</TableCell>
               </TableRow>
-            ) : (
+            )}
+            {!loading && !order.length && (
               <TableRow>
                 <TableCell>There is no Order : (</TableCell>
               </TableRow>
@@ -153,7 +154,7 @@ export default function page() {
             {!loading && order.length > 0 && (
               <TableRow>
                 <TableCell colSpan={3}>Total</TableCell>
-                <TableCell className="text-right">$2,500.00</TableCell>
+                <TableCell className="text-right">${order.reduce((acc, cur) => acc + cur.totalPrice, 0)}.00</TableCell>
               </TableRow>
             )}
           </TableFooter>

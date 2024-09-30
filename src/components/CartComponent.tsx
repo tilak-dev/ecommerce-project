@@ -17,7 +17,7 @@ const CartComponent: React.FC<ProductCardProps> = ({ product }) => {
         className="w-full h-48 object-cover rounded-t-md"
       />
       <div className="mt-4">
-        <h2 className="text-lg font-semibold text-gray-800">{product.title}</h2>
+        <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
         <p className="text-gray-600 text-sm">{product.description.substring(0,75)}</p>
         <p className="text-xl font-bold text-gray-800 mt-2">${product.price.toFixed(2)}</p>
         <p className="text-sm text-gray-500 mt-1">Category: {categoryName}</p>

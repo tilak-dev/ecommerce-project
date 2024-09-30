@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 
 interface Products {
   _id: string;
-  title: string;
+  name: string;
   description: string;
   price: number;
   photoLink: string;
@@ -85,7 +85,7 @@ export default function page() {
                 image={product.photoLink}
                 id={product._id}
                 price={product.price}
-                title={product.title}
+                title={product.name}
                 quantity={product.quantity}
                 handleOnDelete={handleOnDelete}
               />

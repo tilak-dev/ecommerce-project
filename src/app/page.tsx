@@ -39,7 +39,7 @@ export default function Home() {
                   image={product.photoLink}
                   id={product._id}
                   price={product.price}
-                  title={product.title}
+                  name={product.name}
                   quantity={product.quantity}
                 />
               </div>

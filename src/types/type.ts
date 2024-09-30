@@ -6,6 +6,7 @@ export interface Catecories {
 
 export interface Products {
   _id: string;
+  name:string;
   title: string;
   description: string;
   price: number;

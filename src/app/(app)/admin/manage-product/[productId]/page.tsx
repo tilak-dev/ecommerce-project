@@ -3,11 +3,12 @@
 import AdminProductDetail from "@/components/admin/product/AdminProductDetail ";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import React from "react";
 import { useEffect, useState } from "react";
 
 interface Products {
   _id: string;
-  title: string;
+  name: string;
   description: string;
   price: number;
   photoLink: string;
@@ -87,7 +88,7 @@ export default function ProductPage() {
       {product && (
         <AdminProductDetail
           id={product._id}
-          title={product.title}
+          title={product.name}
           description={product.description}
           price={product.price}
           category={product.category}

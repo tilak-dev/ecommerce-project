@@ -1,13 +1,14 @@
 "use client";
 import CartComponent from "@/components/CartComponent";
-import AddressCard from "@/components/user/AddressCard";
 import { useCart } from "@/context/CartProvider";
 import { toast } from "@/hooks/use-toast";
 import { AddressType, Products } from "@/types/type";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const CartPage = () => {
+  const router = useRouter()
   const [cart] = useCart();
   const [product, setProduct] = useState<Products>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -44,7 +45,7 @@ const CartPage = () => {
     try {
       setLoading(true);
       const response = await axios.post("/api/order/create-order", {
-        order: product?.title.toString(),
+        order: product?.name.toString(),
         customerAddress: customerAddress,
         totalPrice: cart.reduce(
           (acc, cur) => acc + cur.price * cur.quantity,
@@ -58,6 +59,8 @@ const CartPage = () => {
           title: "success",
           description: "Order placed successfully",
         });
+        localStorage.removeItem("cart")
+        router.push("/account/orders")
         console.log(response);
       } else {
         toast({
