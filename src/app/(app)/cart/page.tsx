@@ -1,8 +1,9 @@
 "use client";
 import CartComponent from "@/components/CartComponent";
+import AddressCard from "@/components/user/AddressCard";
 import { useCart } from "@/context/CartProvider";
 import { toast } from "@/hooks/use-toast";
-import { Products } from "@/types/type";
+import { AddressType, Products } from "@/types/type";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -10,6 +11,37 @@ const CartPage = () => {
   const [cart] = useCart();
   const [product, setProduct] = useState<Products>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadting, setloading] = useState<boolean>(false);
+  const [addressList, setAddressList] = useState<AddressType[]>([]);
+  const [customerAddress, setCustomerAddress] = useState<string>("");
+
+  const fetchAddress = async () => {
+    try {
+      const response = await axios.get(`/api/manage-address/get-address`);
+      if (!response) {
+        toast({
+          title: "Failed to get address",
+          description: "Failed to fetched address due to server",
+          variant: "destructive",
+        });
+      }
+      // console.log(response.data.data);
+      setAddressList(response.data.data);
+    } catch (error) {
+      toast({
+        title: "Failed to get address",
+        description: "Failed to fetched address due to server",
+        variant: "destructive",
+      });
+      console.error("Error fetching address", error);
+    } finally {
+      setloading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAddress();
+  }, [addressList.length]);
   useEffect(() => {
     cart?.map((c) => setProduct(c));
   }, [cart]);
@@ -21,7 +53,7 @@ const CartPage = () => {
       setLoading(true);
       const response = await axios.post("/api/order/create-order", {
         order: "shoes",
-        customerAddress: "New Delhi, Delhi-110028, India",
+        customerAddress: customerAddress,
         totalPrice: cart.reduce(
           (acc, cur) => acc + cur.price * cur.quantity,
           0
@@ -52,34 +84,101 @@ const CartPage = () => {
       setLoading(false);
     }
   };
+  const handleOnAdd = async (id: string) => {
+    try {
+      setloading(true);
+      const addedAddress = addressList.find((address) => address._id === id);
+
+      const selectedAddress =
+        addedAddress?.city +
+        "," +
+        addedAddress?.state +
+        "-" +
+        addedAddress?.zip +
+        "," +
+        addedAddress?.country;
+      if (!selectedAddress) {
+        toast({
+          title: "Error selecting Address",
+          description: "Selected address not found",
+          duration: 3000,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setCustomerAddress(selectedAddress.toString());
+      toast({
+        title: "Address selected",
+        description: "Selected address successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error set Address",
+        description: error.message,
+        duration: 3000,
+        variant: "destructive",
+      });
+      console.log("Error set address", error);
+      setloading(false);
+    } finally {
+      setloading(false);
+    }
+  };
 
   return (
-    <div className="text-black">
+    <div className="text-black px-5">
       <h1 className=" text-center font-bold text-3xl py-3">Shopping Cart</h1>
       <div className="flex gap-8">
         <div className="grid grid-cols-3 gap-x-3">
           {cart &&
-            cart.map((cart) => (
-              <CartComponent
-                key={cart._id}
-                product={cart}
-                onBuy={handleOnBuy}
-              />
-            ))}
+            cart.map((cart) => <CartComponent key={cart._id} product={cart} />)}
         </div>
         {cart.length > 0 && (
-          <div className="flex justify-center items-center w-1/4 flex-col ">
-            <div className="">
-              Total Price: $
-              {cart.reduce((acc, cur) => acc + cur.price * cur.quantity, 0)}.00
+          <div className="flex justify-center w-1/4 flex-col ">
+            <div className="w-full ">
+              <div className="text-center flex flex-col justify-center items-center">
+                <div className="">
+                  Total Price: $
+                  {cart.reduce((acc, cur) => acc + cur.price * cur.quantity, 0)}
+                  .00
+                </div>
+                <button
+                  disabled={loading ? true : false}
+                  onClick={() => handleOnBuy()}
+                  className="bg-blue-500 text-white py-2 px-4 rounded-md"
+                >
+                  {loading ? "Wait..." : "Checkout"}
+                </button>
+              </div>
+              <h1 className="text-center">Addresses</h1>
+              <div className="w-full flex flex-col justify-center ">
+                {addressList &&
+                  addressList.map((address) => (
+                    <div className="" key={address._id}>
+                      <div className="hover:shadow-xl shadow-indigo-700 transition-shadow duration-300 ease-in-out ">
+                        <div className="flex justify-between items-center px-3 p-1 border rounded-lg shadow-lg bg-white-500">
+                          <div className="py-3 px-2">
+                            <h2 className="text-xl font-semibold">
+                              {address.city}, {address.state}
+                            </h2>
+
+                            <p className="text-gray-600">
+                              {address.zip}, {address.country}
+                            </p>
+                          </div>
+                          <button
+                            className="bg-green-500 text-white px-4 rounded hover:bg-green-600 transition-colors"
+                            onClick={() => handleOnAdd(address._id)}
+                          >
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
-            <button
-              disabled={loading ? true : false}
-              onClick={() => handleOnBuy()}
-              className="bg-blue-500 text-white py-2 px-4 rounded-md"
-            >
-              {loading ? "Wait..." : "Checkout"}
-            </button>
           </div>
         )}
       </div>

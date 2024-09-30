@@ -4,10 +4,9 @@ import { RemoveToCartButton } from './CustomBotton';
 import { useCategory } from '@/context/CategoryProvide';
 type ProductCardProps = {
   product: Products;
-  onBuy: (id: string) => void;
 };
 
-const CartComponent: React.FC<ProductCardProps> = ({ product, onBuy }) => {
+const CartComponent: React.FC<ProductCardProps> = ({ product }) => {
     const [categoryStore] = useCategory()
   const categoryName = categoryStore.find((cat) => cat._id === product.category)?.categoryName || "not available"
   return (
@@ -24,13 +23,8 @@ const CartComponent: React.FC<ProductCardProps> = ({ product, onBuy }) => {
         <p className="text-sm text-gray-500 mt-1">Category: {categoryName}</p>
         <p className="text-sm text-gray-500 mt-1">Quantity: {product.quantity}</p>
 
-        <div className="flex justify-between items-center mt-4">
-          <button
-            onClick={() => onBuy(product._id)}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-          >
-            Buy
-          </button>
+        <div className=" flex flex-col items-end">
+    
           <div className="">
             <RemoveToCartButton id={product._id}/>
           </div>
