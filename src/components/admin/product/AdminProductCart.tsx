@@ -45,7 +45,7 @@ const AdminProductCard = ({
           <TextLimit text={description} limit={75} />
         </p>
         <div className="text-lg font-semibold text-gray-900">₹{price}</div>
-        <div className="text-sm text-gray-700 mb-2">In stock: {quantity}</div>
+        <div className={`text-sm text-gray-700 mb-2 ${quantity < 1 && " text-red-800"}`}>In stock: {quantity < 1 ? "Out Of stock": quantity}</div>
         <div className="flex gap-x-5 justify-center">
           <div className="">
             <EditProducts id={id} />

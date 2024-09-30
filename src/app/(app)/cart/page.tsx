@@ -52,7 +52,7 @@ const CartPage = () => {
     try {
       setLoading(true);
       const response = await axios.post("/api/order/create-order", {
-        order: "shoes",
+        order: product?.title,
         customerAddress: customerAddress,
         totalPrice: cart.reduce(
           (acc, cur) => acc + cur.price * cur.quantity,

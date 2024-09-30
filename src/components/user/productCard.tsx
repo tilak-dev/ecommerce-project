@@ -11,7 +11,7 @@ interface ProductCard {
   image: string;
   category: string;
   quantity: number;
-  product: Products 
+  product: Products;
 }
 
 const ProductCard = ({
@@ -22,10 +22,12 @@ const ProductCard = ({
   price,
   category,
   quantity,
-  product
+  product,
 }: ProductCard) => {
-  const [categoryStore] = useCategory()
-  const categoryName = categoryStore.find(c => c._id === category)?.categoryName || "not available" 
+  const [categoryStore] = useCategory();
+  const categoryName =
+    categoryStore.find((c) => c._id === category)?.categoryName ||
+    "not available";
   return (
     <div className="max-w-sm rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-700 ease-in-out  bg-white border border-gray-200 transform  ">
       <img className="w-full h-52 object-cover" src={image} alt={title} />
@@ -35,20 +37,27 @@ const ProductCard = ({
           Category: {categoryName}
         </p>
         <p className="cursor-pointer text-gray-600 text-sm mb-2.5">
-          
           <TextLimit text={description} limit={75} />
         </p>
         <div className="text-lg font-semibold text-gray-900">₹{price}</div>
-        <div className="text-sm text-gray-700 mb-2">In stock: {quantity}</div>
+        <div
+          className={`text-sm text-gray-700 mb-2 ${
+            quantity < 1 && " text-red-800"
+          }`}
+        >
+          In stock: {quantity < 1 ? "Out Of stock" : quantity}
+        </div>
         <div className="flex gap-x-5 justify-center">
           <div className="">
             {/* edit button */}
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300"
-            >Detail</button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300">
+              Detail
+            </button>
           </div>
           <div className="">
-          <AddToCartButton item={product}  />
+            <button disabled={quantity < 1 ? true : false}>
+              <AddToCartButton item={product} />
+            </button>
           </div>
         </div>
       </div>

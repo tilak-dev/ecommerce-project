@@ -51,9 +51,7 @@ const AdminProductDetail = ({
                 <div className="text-xl font-semibold text-gray-900 ">
                   Price: ₹{price}
                 </div>
-                <div className="text-lg text-gray-700 ">
-                  Stock Available: {quantity}
-                </div>
+                <div className={`text-sm text-gray-700 mb-2  ${quantity < 1 && " text-red-800"}`}>In stock: {quantity < 1 ? "Out Of stock": quantity}</div>
               </div>
               <div className="flex space-x-4 flex-row justify-between">
                 <EditProducts id="fs" />
