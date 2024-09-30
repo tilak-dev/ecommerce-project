@@ -55,9 +55,7 @@ const ProductCard = ({
             </button>
           </div>
           <div className="">
-            <button disabled={quantity < 1 ? true : false}>
-              <AddToCartButton item={product} />
-            </button>
+            <AddToCartButton item={product} />
           </div>
         </div>
       </div>

@@ -13,26 +13,18 @@ const CartPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadting, setloading] = useState<boolean>(false);
   const [addressList, setAddressList] = useState<AddressType[]>([]);
-  const [customerAddress, setCustomerAddress] = useState<string>("");
+  const [customerAddress, setCustomerAddress] = useState<string | null>(null);
 
   const fetchAddress = async () => {
     try {
       const response = await axios.get(`/api/manage-address/get-address`);
       if (!response) {
-        toast({
-          title: "Failed to get address",
-          description: "Failed to fetched address due to server",
-          variant: "destructive",
-        });
+        console.log("failed to get address")
       }
       // console.log(response.data.data);
       setAddressList(response.data.data);
     } catch (error) {
-      toast({
-        title: "Failed to get address",
-        description: "Failed to fetched address due to server",
-        variant: "destructive",
-      });
+      
       console.error("Error fetching address", error);
     } finally {
       setloading(false);
@@ -52,7 +44,7 @@ const CartPage = () => {
     try {
       setLoading(true);
       const response = await axios.post("/api/order/create-order", {
-        order: product?.title,
+        order: product?.title.toString(),
         customerAddress: customerAddress,
         totalPrice: cart.reduce(
           (acc, cur) => acc + cur.price * cur.quantity,
@@ -82,6 +74,7 @@ const CartPage = () => {
       console.log(error);
     } finally {
       setLoading(false);
+      setCustomerAddress(null)
     }
   };
   const handleOnAdd = async (id: string) => {
@@ -106,12 +99,19 @@ const CartPage = () => {
         });
         return;
       }
-
+   
       setCustomerAddress(selectedAddress.toString());
       toast({
         title: "Address selected",
         description: "Selected address successfully",
       });
+       if(customerAddress === null){
+        toast({
+          title: "Failed",
+          description: "Please select address",
+        });
+        return;
+      }
     } catch (error: any) {
       toast({
         title: "Error set Address",
